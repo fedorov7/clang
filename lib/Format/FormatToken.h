@@ -44,6 +44,8 @@ enum TokenType {
   TT_ForEachMacro,
   TT_FunctionAnnotationRParen,
   TT_FunctionDeclarationName,
+  TT_FunctionDeclarationParamsStart,
+  TT_FunctionDeclarationParamsStop,
   TT_FunctionLBrace,
   TT_FunctionTypeLParen,
   TT_ImplicitStringLiteral,

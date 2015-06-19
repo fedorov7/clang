@@ -126,7 +126,7 @@ bool ContinuationIndenter::canBreak(const LineState &State) {
   // Don't break after very short return types (e.g. "void") as that is often
   // unexpected.
   if (Current.is(TT_FunctionDeclarationName) &&
-      !Style.AlwaysBreakAfterDefinitionReturnType && State.Column < 6)
+      !Style.AlwaysBreakAfterDefinitionReturnType && State.Column < 4)
     return false;
 
   return !State.Stack.back().NoLineBreak;
@@ -242,6 +242,12 @@ bool ContinuationIndenter::mustBreak(const LineState &State) {
 
   if (Current.is(tok::lessless) && Previous.is(tok::identifier) &&
       Previous.TokenText == "endl")
+    return true;
+
+  if (Current.is(TT_FunctionDeclarationParamsStart))
+    return true;
+
+  if (Current.is(TT_FunctionDeclarationParamsStop))
     return true;
 
   return false;

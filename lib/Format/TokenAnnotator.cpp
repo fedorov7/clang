@@ -1501,6 +1501,8 @@ void TokenAnnotator::calculateFormattingInformation(AnnotatedLine &Line) {
     return;
   FormatToken *Current = Line.First->Next;
   bool InFunctionDecl = Line.MightBeFunctionDecl;
+  bool FunctionParametersDeclaration = false;
+
   while (Current) {
     if (isFunctionDeclarationName(*Current))
       Current->Type = TT_FunctionDeclarationName;
@@ -1566,6 +1568,23 @@ void TokenAnnotator::calculateFormattingInformation(AnnotatedLine &Line) {
 
     if (Current->is(TT_CtorInitializerColon))
       InFunctionDecl = false;
+
+    if (Current->Previous &&
+        Current->Previous->is(TT_FunctionDeclarationName) && Current->Next &&
+        Current->is(tok::l_paren)) {
+      Current->Next->Type = TT_FunctionDeclarationParamsStart;
+      Current->Next->IsMultiline = true;
+      Current->Next->CanBreakBefore = true;
+      FunctionParametersDeclaration = true;
+    }
+
+    if (FunctionParametersDeclaration &&
+        Current->is(tok::r_paren)) {
+      FunctionParametersDeclaration = false;
+      Current->CanBreakBefore = true;
+      Current->Type = TT_FunctionDeclarationParamsStop;
+      Current->LastNewlineOffset = 0;
+    }
 
     // FIXME: Only calculate this if CanBreakBefore is true once static
     // initializers etc. are sorted out.
