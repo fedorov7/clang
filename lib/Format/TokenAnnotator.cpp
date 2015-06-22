@@ -1572,9 +1572,9 @@ void TokenAnnotator::calculateFormattingInformation(AnnotatedLine &Line) {
     if (Current->Previous &&
         Current->Previous->is(TT_FunctionDeclarationName) && Current->Next &&
         Current->is(tok::l_paren)) {
-      Current->Next->Type = TT_FunctionDeclarationParamsStart;
       Current->Next->IsMultiline = true;
       Current->Next->CanBreakBefore = true;
+      Current->Next->MustBreakBefore = true;
       FunctionParametersDeclaration = true;
     }
 
@@ -1582,7 +1582,7 @@ void TokenAnnotator::calculateFormattingInformation(AnnotatedLine &Line) {
         Current->is(tok::r_paren)) {
       FunctionParametersDeclaration = false;
       Current->CanBreakBefore = true;
-      Current->Type = TT_FunctionDeclarationParamsStop;
+      Current->MustBreakBefore = true;
       Current->LastNewlineOffset = 0;
     }
 

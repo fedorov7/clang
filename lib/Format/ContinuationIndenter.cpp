@@ -244,12 +244,6 @@ bool ContinuationIndenter::mustBreak(const LineState &State) {
       Previous.TokenText == "endl")
     return true;
 
-  if (Current.is(TT_FunctionDeclarationParamsStart))
-    return true;
-
-  if (Current.is(TT_FunctionDeclarationParamsStop))
-    return true;
-
   return false;
 }
 
